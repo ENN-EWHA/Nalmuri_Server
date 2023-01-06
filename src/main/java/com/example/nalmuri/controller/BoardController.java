@@ -9,6 +9,7 @@ import com.example.nalmuri.DTO.response.CustomedCardResponseDTO;
 import com.example.nalmuri.DTO.response.EmotionResponseDTO;
 import com.example.nalmuri.entity.Board;
 import com.example.nalmuri.entity.Card;
+import com.example.nalmuri.exception.ApiRequestException;
 import com.example.nalmuri.service.BoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -52,23 +53,24 @@ public class BoardController {
     //전체 질문카드 조회
     @GetMapping("/question/{userid}")
     public List<CustomedCardResponseDTO> getAllCard(@PathVariable String userid) throws Exception{
-        List<Board> boardList = boardService.getAllDiary(userid);
+        List<Board> boardList = boardService.getAllDiary(userid);  //ok
         log.info(boardList.toString());
-        List<Integer> cardidList = boardList.stream().map(h->h.getCardid()).collect(Collectors.toList());
+        List<Integer> cardidList = boardList.stream().map(Board::getCardid).collect(Collectors.toList()); //ok
         log.info(cardidList.toString());
-        List<Card> cardList = boardService.getAllCard(cardidList);
-        return boardService.getCustomedCardList(cardList,boardList);
+        return boardService.getCustomedCardList(cardidList,boardList);
 
     }
 
     //감정별 질문카드 조회
-    @GetMapping("/question/{userid}/list?emotion={emotion}")
-    public List<CustomedCardResponseDTO> getEmotionCard(@PathVariable String userid, @RequestParam int emotion){
+    @GetMapping("/question/{userid}/list/{emotion}")
+    public List<CustomedCardResponseDTO> getEmotionCard(@PathVariable String userid, @PathVariable int emotion){
         List<Board> boardList = boardService.getAllDiary(userid);
-        List<Integer> cardidList = boardList.stream().map(h->h.getCardid()).collect(Collectors.toList());
-        List<Card> cardList = boardService.getAllCard(cardidList);
-        List<CustomedCardResponseDTO> list = boardService.getCustomedCardList(cardList,boardList);
-        list.stream().filter(h->h.getEmotion()==emotion).collect(Collectors.toList());
+        List<Integer> cardidList = boardList.stream().map(Board::getCardid).collect(Collectors.toList());
+        List<CustomedCardResponseDTO> list = boardService.getCustomedCardList(cardidList,boardList);
+        list = list.stream().filter(h->h.getEmotion()==emotion).collect(Collectors.toList());
+        if(list.isEmpty()){
+            throw new ApiRequestException("작성된 카드 중 해당 감정의 카드는 없습니다.");
+        }
         return list;
     }
     //감정 분석 요청

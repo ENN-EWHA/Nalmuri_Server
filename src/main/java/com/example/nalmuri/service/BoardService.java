@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,47 +32,29 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public List<CustomedCardResponseDTO> getCustomedCardList(List<Card> cardList, List<Board> boardList){
+    public List<CustomedCardResponseDTO> getCustomedCardList(List<Integer> cardidList, List<Board> boardList){
 
-        if (boardList==null || boardList.isEmpty()){
-            throw new ApiRequestException("작성된 일기 존재하지 않습니다.");
-        }
-        log.info(String.valueOf(cardList));
 
-        List<Integer> cardidList = new ArrayList<Integer>();
-        cardidList = cardList.stream().map(h->h.getCardid()).collect(Collectors.toList());
-        log.info(String.valueOf(cardidList));
-        for(Card card : cardList){
-            try{
-                int id = card.getCardid();
-            }
-            catch(NullPointerException e){
-                throw new ApiRequestException("cardid가 존재하지 않습니다.");
-            }
-            if(card.getCardid()==-1){
+
+        List<Card> cardList = cardidList.stream().map(h->cardRepository.findByCardid(h)).collect(Collectors.toList());
+
+
+        List<CustomedCardResponseDTO> cards = new ArrayList<CustomedCardResponseDTO>();
+        for(int i=0;i<boardList.size();i++){
+            Board diary = boardList.get(i);
+            log.info(String.valueOf(diary));
+
+            if(cardidList.get(i).equals(-1)){
                 continue;
             }
-            cardidList.add(card.getCardid());
+            Card card = cardRepository.findByCardid(cardidList.get(i));
+            log.info(String.valueOf(card));
+
+            cards.add(new CustomedCardResponseDTO(diary.getCardid(), diary.getCardAnswer(), card.getCardquestion(), card.getEmotion()));
 
         }
 
-        if(cardidList==null || cardidList.isEmpty()){
-            throw new ApiRequestException("작성된 일기에 대해 작성된 카드가 존재하지 않습니다.");
-        }
-        List<CustomedCardResponseDTO> joined = new ArrayList<CustomedCardResponseDTO>();
-        for(Card card : cardList){
-            for(Board board : boardList){
-                if(board.getCardid()== card.getCardid()) {
-                    CustomedCardResponseDTO newcard = new CustomedCardResponseDTO(board.getCardid(), board.getCardAnswer(), card.getCardquestion(), card.getEmotion());
-                    joined.add(newcard);
-                }
-//                else{
-//                    throw new ApiRequestException("몰랑");
-//                }
-            }
-        }
-
-        return joined;
+        return cards;
     }
 
     //전체 일기 조회
@@ -99,6 +82,17 @@ public class BoardService {
     //전체 질문카드 조회
     public List<Card> getAllCard(List<Integer> cardidList){
         List<Card> allCards = new ArrayList<Card>();
+        int count = 0;
+        for(int i: cardidList){
+            if(i==-1){
+                count++;
+            }
+        }
+
+        if(count==cardidList.size()){
+            throw new ApiRequestException("작성된 카드가 없음");
+        }
+
         cardidList.forEach(s -> allCards.add(cardRepository.findByCardid(s)));
         if(allCards==null || allCards.isEmpty()){
             throw new ApiRequestException("해당하는 카드가 없습니다.");
