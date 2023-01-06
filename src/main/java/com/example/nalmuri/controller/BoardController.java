@@ -62,8 +62,8 @@ public class BoardController {
     }
 
     //감정별 질문카드 조회
-    @GetMapping("/question/{userid}/list?emotion={emotion}")
-    public List<CustomedCardResponseDTO> getEmotionCard(@PathVariable String userid, @RequestParam int emotion){
+    @GetMapping("/question/{userid}/list/{emotion}")
+    public List<CustomedCardResponseDTO> getEmotionCard(@PathVariable String userid, @PathVariable int emotion){
         List<Board> boardList = boardService.getAllDiary(userid);
         List<Integer> cardidList = boardList.stream().map(h->h.getCardid()).collect(Collectors.toList());
         List<Card> cardList = boardService.getAllCard(cardidList);
