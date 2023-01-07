@@ -68,7 +68,7 @@ public class BoardService {
     }
 
     //특정 날짜 일기 조회
-    public Board getDailyBoard(DiaryDTO diaryDTO) throws Exception {
+    public Board getDailyBoard(DiaryDTO diaryDTO) {
         if (!boardRepository.existsByWriteDate(diaryDTO.getWriteDate())){
             throw new ApiRequestException("해당 날짜에 작성된 일기가 없습니다.");
         }
