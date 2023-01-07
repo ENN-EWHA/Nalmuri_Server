@@ -12,8 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, DiaryDTO> {
-    Optional<Board> findByWriteDateAndUserid(Date writeDate, String userid);
+    Board findByWriteDateAndUserid(Date writeDate, String userid);
 
     List<Board> findByUserid(String userid);
+    boolean existsByWriteDate(Date writeDate);
 }
 

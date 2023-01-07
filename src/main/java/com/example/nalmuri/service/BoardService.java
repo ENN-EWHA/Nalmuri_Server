@@ -57,7 +57,7 @@ public class BoardService {
         return cards;
     }
 
-    //전체 일기 조회
+
     //전체 일기 조회
     public List<Board> getAllDiary(String userid){
         List<Board> boardList = boardRepository.findByUserid(userid);
@@ -65,12 +65,14 @@ public class BoardService {
             throw new ApiRequestException("작성된 일기가 없습니다.");
         }
         return boardList;
-//
     }
 
     //특정 날짜 일기 조회
     public Board getDailyBoard(DiaryDTO diaryDTO) throws Exception {
-        return boardRepository.findByWriteDateAndUserid(diaryDTO.getWriteDate(), diaryDTO.getUserid()).orElseThrow(() -> new Exception("해당 날짜에 작성된 일기가 없습니다."));
+        if (!boardRepository.existsByWriteDate(diaryDTO.getWriteDate())){
+            throw new ApiRequestException("해당 날짜에 작성된 일기가 없습니다.");
+        }
+        return boardRepository.findByWriteDateAndUserid(diaryDTO.getWriteDate(), diaryDTO.getUserid());
     }
 
     public void deleteDiary(DiaryDTO diaryDTO) throws Exception {
