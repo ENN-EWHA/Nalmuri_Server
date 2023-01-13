@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -87,15 +89,17 @@ public class UserController {
     }
 
     //find id
-    @GetMapping("/my/find/id")
-    public ResponseEntity findId(@RequestBody IdRequestDTO idRequestDTO){
+    @PostMapping("/my/find/id")
+    public ResponseEntity<Map<String,String>> findId(@RequestBody IdRequestDTO idRequestDTO){
+        log.info(String.valueOf(idRequestDTO));
         String foundId = userService.findId(idRequestDTO);
-        log.info(String.valueOf(idRequestDTO.getBirth()));
-        return new ResponseEntity<>(foundId,HttpStatus.OK);
+        Map<String, String> result = new HashMap<>();
+        result.put("id", foundId);
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
       //find password
-    @GetMapping("/my/find/password")
+    @PostMapping("/my/find/password")
     @Transactional
     public ResponseEntity<Message> findPw(@RequestBody PwFindRequestDTO pwFindRequestDTO) throws Exception {
         Message message = new Message();

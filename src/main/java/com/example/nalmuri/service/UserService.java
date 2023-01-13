@@ -98,6 +98,7 @@ public class UserService {
 
     public String findId(IdRequestDTO idRequestDTO){
         Optional<User> user = userRepository.findByEmail(idRequestDTO.getEmail());
+        log.info(String.valueOf(user.get().getBirth()));
 
         if(!user.isPresent()){
             throw new ApiRequestException("가입되지 않은 이메일입니다.");
@@ -105,9 +106,10 @@ public class UserService {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String date = format.format(user.get().getBirth());
+        log.info(date);
 
         String date2 = format.format(idRequestDTO.getBirth());
-        log.info(String.valueOf(foundbirth));
+        log.info(date2);
 
         if(!date.equals(date2)){
             throw new ApiRequestException("생년월일이 일치하지 않습니다.");
