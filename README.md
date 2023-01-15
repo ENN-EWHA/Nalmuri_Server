@@ -20,7 +20,7 @@
 | 권영경 | 김다희 | 김승언 | 김태영 | 박가영 |
 |------|------|------|------|------|
 | <img src="https://user-images.githubusercontent.com/70185844/212488683-2ee8af5c-ece2-4c4a-9bc3-dda25af9575e.png" width="150" height="150"/> | <img src="https://user-images.githubusercontent.com/70185844/212488720-4a2170db-7ae8-4335-9538-0c5249fd90d5.png" width="150" height="150"/> | <img src="https://user-images.githubusercontent.com/70185844/212488740-5bb3fb96-575f-4106-9274-f0d26a5af3a4.png" width="150" height="150"/> | <img src="https://user-images.githubusercontent.com/70185844/212504412-07df0960-ea30-41c4-a2c3-4c04ad13ec37.png" width="150" height="150"/> | <img src="https://user-images.githubusercontent.com/70185844/212488462-dc984efa-19e9-47ca-b731-b6f01afb2a59.png" width="150" height="150"/> |
-| Frontend, AI | Frontend, AI | Backend, AI | Backend,  DevOps | Backend, Devops |
+| Frontend, AI | Frontend, AI | Backend, AI | Backend,  DevOps | Backend, DevOps |
 | [@asaei623](https://github.com/asaei623) | [@DAHEEKIM1](https://github.com/DAHEEKIM1) | [@seung-eon](https://github.com/seung-eon) | [@EHOia](https://github.com/EHOia) | [ParkIsComming](https://github.com/ParkIsComing) |
 
 
