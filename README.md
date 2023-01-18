@@ -15,6 +15,13 @@
 <img src="https://img.shields.io/badge/Apache Tomcat-F8DC75?style=flat&logo=ApacheTomcat&logoColor=black"/></a>
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/></a>
 
+### etc.
+<img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat&logo=AmazonRDS&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Google Cloud Platform-4285F4?style=flat&logo=GoogleCloud&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=white"/></a> <br/>
+<img src="https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=Postman&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=Git&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=Github&logoColor=white"/></a>
 
 ## Team ENN
 | 권영경 | 김다희 | 김승언 | 김태영 | 박가영 |
