@@ -2,13 +2,17 @@ package com.example.nalmuri.service;
 
 import com.example.nalmuri.DTO.TokenDTO;
 import com.example.nalmuri.DTO.request.MemberRequestDTO;
+import com.example.nalmuri.DTO.request.NewAccessTokenRequestDTO;
 import com.example.nalmuri.DTO.response.MemberResponseDTO;
 import com.example.nalmuri.entity.User;
 import com.example.nalmuri.exception.ApiRequestException;
 import com.example.nalmuri.jwt.TokenProvider;
 import com.example.nalmuri.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -19,8 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 
 @Service
@@ -47,14 +55,13 @@ public class AuthService {
 
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
-        return tokenProvider.generateTokenDto(authentication,response);
+        return tokenProvider.generateTokenDto(authentication);
     }
 
     @Transactional
-    public Map<String, String> getRefreshToken(MemberRequestDTO requestDTO,HttpServletRequest request, HttpServletResponse response){
-        UsernamePasswordAuthenticationToken authenticationToken = requestDTO.toAuthentication();
-        Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
+    public String reIssue(NewAccessTokenRequestDTO tokenRequestDTO, HttpServletRequest request, HttpServletResponse response){
 
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDTO.getAccessToken());
         String accessToken = "";
         String refreshToken = "";
 
@@ -64,7 +71,7 @@ public class AuthService {
                 if(cookie.getName().equals("refreshToken")) {
                     refreshToken = cookie.getValue();
                     if(tokenProvider.validateToken(refreshToken)) {
-                        accessToken = tokenProvider.recreateAccessToken(authentication, response);
+                        accessToken = tokenProvider.recreateAccessToken(authentication);
                     }else {
                         throw new ApiRequestException("invalid refresh token");
                     }
@@ -73,7 +80,7 @@ public class AuthService {
 
         }
 
-        return createRefreshJson(accessToken);
+        return accessToken;
 
 
     }

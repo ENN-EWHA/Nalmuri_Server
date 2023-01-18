@@ -4,6 +4,7 @@ package com.example.nalmuri.controller;
 import com.example.nalmuri.DTO.TokenDTO;
 import com.example.nalmuri.DTO.request.LoginRequestDTO;
 import com.example.nalmuri.DTO.request.MemberRequestDTO;
+import com.example.nalmuri.DTO.request.NewAccessTokenRequestDTO;
 import com.example.nalmuri.DTO.response.MemberResponseDTO;
 import com.example.nalmuri.entity.User;
 import com.example.nalmuri.jwt.TokenProvider;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -45,7 +47,7 @@ public class AuthController {
         TokenDTO token = authService.login(requestDto,response);
         String refreshToken = token.getRefreshToken();
         Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(7*24*60*60);
+        cookie.setMaxAge(24*60*60);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
@@ -61,11 +63,14 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public Map<String, String> refreshToken(@RequestBody  MemberRequestDTO requestDto, HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody NewAccessTokenRequestDTO requestDto, HttpServletRequest request, HttpServletResponse response){
         log.info("refesh api");
         Cookie [] yum = request.getCookies();
-        log.info(String.valueOf(yum));
-        return authService.getRefreshToken(requestDto, request, response);
+
+        String accessToken =  authService.reIssue(requestDto, request, response);
+        Map<String, String> token = new HashMap<>();
+        token.put("accessToken", accessToken);
+        return new ResponseEntity<>(token,HttpStatus.OK);
 
     }
 
